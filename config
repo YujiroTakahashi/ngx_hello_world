@@ -1,0 +1,36 @@
+ngx_addon_name="ngx_http_hello_world_module"
+
+MODULE_NAME="ngx_http_hello_world_module"
+MODULE_SRCS="$ngx_addon_dir/ngx_http_hello_world_module.c"
+MODULE_DEPS=""
+
+if [ -f auto/module ] ; then
+    ngx_module_incs=$ngx_addon_dir
+    ngx_module_deps=$MODULE_DEPS
+
+    if [ $ngx_module_link = DYNAMIC ] ; then
+        ngx_module_name="$MODULE_NAME"
+        ngx_module_srcs="$MODULE_SRCS"
+
+        . auto/module
+
+    else
+        ngx_module_type=CORE
+        ngx_module_name=$MODULE_NAME
+        ngx_module_srcs=$MODULE_SRCS
+
+        . auto/module
+
+    fi
+
+else
+    CORE_MODULES="$CORE_MODULES $RTMP_CORE_MODULES"
+    HTTP_MODULES="$HTTP_MODULES $MODULE_NAME"
+
+    NGX_ADDON_DEPS="$NGX_ADDON_DEPS $MODULE_DEPS"
+    NGX_ADDON_SRCS="$NGX_ADDON_SRCS $MODULE_SRCS"
+
+    CFLAGS="$CFLAGS -I$ngx_addon_dir"
+fi
+
+USE_OPENSSL=YES
